@@ -89,6 +89,17 @@
             reflectToAttribute: true,
             value: null,
           },
+          /*
+           * Permissions granted
+           */
+          granted: {
+            type: Boolean,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true,
+            value: false,
+            computed: '_computeGranted(permissions)',
+          },
           /**
            * Geolocation API position object
            */
@@ -250,6 +261,17 @@
        */
       _listen(auto, permissions) {
         if (auto || permissions === 'granted') this.check();
+      }
+
+      /**
+       * Compute permissions granted
+       *
+       * @param {string|null} permissions
+       * @return {boolean}
+       * @private
+       */
+      _computeGranted(permissions) {
+        return permissions === 'granted';
       }
     };
   };

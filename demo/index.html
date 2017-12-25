@@ -40,12 +40,14 @@
                            latitude="{{latitude}}"
                            error="{{error}}"
                            permissions="{{permissions}}"
+                           granted="{{granted}}"
           ></fabric-location>
           <p hidden$="[[!error]]" id="error">Error: [[error.message]]</p>
           <hr>
           <ul>
             <li><strong>Supported:</strong> [[supported]]</li>
             <li><strong>Permissions:</strong> [[permissions]]</li>
+            <li><strong>Permissions granted:</strong> [[granted]]</li>
             <li><strong>Position:</strong>
               <ul>
                 <li><strong>Longitude:</strong> [[position.coords.longitude]]</li>
