@@ -80,7 +80,7 @@
           },
           /**
            * Current permissions state:
-           * granted, prompt or denied
+           * granted, prompt, denied or unknown
            */
           permissions: {
             type: String,
@@ -201,6 +201,7 @@
        */
       _onSuccess(pos) {
         this.reset();
+        this._setPermissions('granted');
         this._setPosition(pos);
         this._setLatitude(pos.coords.latitude);
         this._setLongitude(pos.coords.longitude);
@@ -242,6 +243,10 @@
        * @private
        */
       _checkPermissions() {
+        if (!navigator.permissions) {
+          this._setPermissions('unknown');
+          return;
+        }
         navigator.permissions.query({
           name: 'geolocation',
         }).then((status) => {
@@ -260,7 +265,9 @@
        * @private
        */
       _listen(auto, permissions) {
-        if (auto || permissions === 'granted') this.check();
+        if (auto || permissions === 'granted' || permissions === 'unknown') {
+          this.check();
+        }
       }
 
       /**
