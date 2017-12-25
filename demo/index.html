@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>fabric-location demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../polymer/lib/elements/dom-bind.html">
+  <link rel="import" href="../fabric-location.html">
+
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+      [hidden] {
+        display: none;
+      }
+
+      #error {
+        color: red;
+        font-weight: bold;
+      }
+    </style>
+  </custom-style>
+</head>
+<body>
+<div class="vertical-section-container centered">
+  <h3>Basic fabric-location demo</h3>
+  <demo-snippet>
+    <template>
+      <dom-bind>
+        <template>
+          <fabric-location auto
+                           supported="{{supported}}"
+                           position="{{position}}"
+                           longitude="{{longitude}}"
+                           latitude="{{latitude}}"
+                           error="{{error}}"
+                           permissions="{{permissions}}"
+          ></fabric-location>
+          <p hidden$="[[!error]]" id="error">Error: [[error.message]]</p>
+          <hr>
+          <ul>
+            <li><strong>Supported:</strong> [[supported]]</li>
+            <li><strong>Permissions:</strong> [[permissions]]</li>
+            <li><strong>Position:</strong>
+              <ul>
+                <li><strong>Longitude:</strong> [[position.coords.longitude]]</li>
+                <li><strong>Latitude</strong> [[position.coords.latitude]]</li>
+                <li><strong>Timestamp</strong> [[position.coords.timestamp]]</li>
+              </ul>
+            </li>
+            <li><strong>Longitude:</strong> [[longitude]]</li>
+            <li><strong>Latitude</strong> [[latitude]]</li>
+          </ul>
+        </template>
+      </dom-bind>
+    </template>
+  </demo-snippet>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="./location-mixin.html">
+
+<dom-module id="fabric-location">
+  <template>
+    <style>
+      :host {
+        display: none;
+      }
+    </style>
+  </template>
+
+  <script>
+    /**
+     * `fabric-location`
+     *
+     *
+     * @customElement
+     * @polymer
+     * @appliesMixin Fabric.AuthMixin
+     * @demo demo/index.html
+     */
+    class FabricLocation extends Fabric.LocationMixin(Polymer.Element) {
+      /**
+       * @return {string}
+       */
+      static get is() {
+        return 'fabric-location';
+      }
+    }
+
+    window.customElements.define(FabricLocation.is, FabricLocation);
+  </script>
+</dom-module>

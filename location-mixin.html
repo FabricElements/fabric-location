@@ -1,0 +1,256 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<script>
+  window.Fabric = window.Fabric || {};
+
+  /**
+   * Fabric.LocationMixin
+   *
+   * @polymerMixin Fabric.LocationMixin
+   * @memberOf Fabric
+   * @constructor
+   * @summary Custom element base class that provides the core API for
+   * @property {boolean} baseClass
+   * @param {Function} baseClass
+   */
+  Fabric.LocationMixin = (baseClass) => {
+    return class extends baseClass {
+      /**
+       * @return {object}
+       */
+      static get properties() {
+        return {
+          /*
+           * Check for position when ready
+           */
+          auto: {
+            type: Boolean,
+            value: false,
+          },
+          /*
+           * Disable email input on sign-up form
+           */
+          disabled: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Error
+           */
+          error: {
+            type: Object,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true,
+            value: null,
+          },
+          /**
+           * If true, enables high accuracy GPS.
+           */
+          highAccuracy: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * The latitude of the current position.
+           */
+          latitude: {
+            type: Number,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true,
+            value: null,
+          },
+          /**
+           * The longitude of the current position.
+           */
+          longitude: {
+            type: Number,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true,
+            value: null,
+          },
+          /**
+           * The maximumAge option in the Gelocation API.
+           */
+          maximumAge: {
+            type: Number,
+            value: 0,
+          },
+          /**
+           * Current permissions state:
+           * granted, prompt or denied
+           */
+          permissions: {
+            type: String,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true,
+            value: null,
+          },
+          /**
+           * Geolocation API position object
+           */
+          position: {
+            type: Object,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true,
+            value: null,
+          },
+          /*
+           * Disable email input on sign-up form
+           */
+          supported: {
+            type: Boolean,
+            notify: true,
+            readOnly: true,
+            reflectToAttribute: true,
+            value: false,
+          },
+          /**
+           * The timeout option in the Gelocation API.
+           */
+          timeout: {
+            type: Number,
+            value: 10000,
+          },
+          /**
+           * If true, the latitude/longitude update as the device changes
+           * position. If not set, the latitude/longitude are provided once.
+           */
+          watch: {
+            type: Boolean,
+            value: false,
+          },
+          /**
+           * Watch for changes
+           */
+          _watch: {
+            type: Function,
+          },
+        };
+      }
+
+      /**
+       * Connected callback
+       */
+      connectedCallback() {
+        super.connectedCallback();
+        this._setSupported(!!navigator.geolocation);
+        this._checkPermissions();
+      }
+
+      /**
+       * Disconnected callback
+       */
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        this._clearWatch();
+      }
+
+      /**
+       * @return {array}
+       */
+      static get observers() {
+        return [
+          // eslint-disable-next-line max-len
+          '_listen(auto, permissions, supported, disabled, highAccuracy, timeout, maximumAge,)',
+        ];
+      }
+
+      /**
+       * Check for location
+       */
+      check() {
+        this._clearWatch();
+        if (!this.supported || this.disabled) {
+          return;
+        }
+        const success = this._onSuccess.bind(this);
+        const error = this._onError.bind(this);
+        const options = {
+          enableHighAccuracy: this.highAccuracy,
+          timeout: this.timeout,
+          maximumAge: this.maximumAge,
+        };
+        if (this.watch) {
+          // eslint-disable-next-line max-len
+          this._watch = navigator.geolocation.watchPosition(success, error, options);
+        } else {
+          navigator.geolocation.getCurrentPosition(success, error, options);
+        }
+      }
+
+      /**
+       * Success callback when the Geolocation API returns results.
+       *
+       * @param {Position} pos A position object from the Geolocation API.
+       */
+      _onSuccess(pos) {
+        this.reset();
+        this._setPosition(pos);
+        this._setLatitude(pos.coords.latitude);
+        this._setLongitude(pos.coords.longitude);
+      }
+
+      /**
+       * Error callback when the Geolocation API returns an error.
+       *
+       * @param {Position} err The error that was returned.
+       */
+      _onError(err) {
+        this.reset();
+        this._setError(err);
+      }
+
+      /**
+       * Stop updating latitude/longitude as the device changes position.
+       * @param {Number} watch watch ID value.
+       */
+      _clearWatch() {
+        if (this._watch) {
+          navigator.geolocation.clearWatch(this._watch);
+          this._watch = null;
+        }
+      }
+
+      /**
+       * Reset all values
+       */
+      reset() {
+        this._setPosition(null);
+        this._setLatitude(null);
+        this._setLongitude(null);
+        this._setError(null);
+      }
+
+      /**
+       * Check for permissions
+       * @private
+       */
+      _checkPermissions() {
+        navigator.permissions.query({
+          name: 'geolocation',
+        }).then((status) => {
+          this._setPermissions(status.state);
+          status.onchange = (event) => {
+            this._setPermissions(event.target.state);
+          };
+        });
+      }
+
+      /**
+       * Listen for option changes
+       *
+       * @param {boolean} auto
+       * @param {string} permissions
+       * @private
+       */
+      _listen(auto, permissions) {
+        if (auto || permissions === 'granted') this.check();
+      }
+    };
+  };
+</script>
