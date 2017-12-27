@@ -131,14 +131,14 @@
            * If true, the latitude/longitude update as the device changes
            * position. If not set, the latitude/longitude are provided once.
            */
-          watch: {
+          listen: {
             type: Boolean,
             value: false,
           },
           /**
-           * Watch for changes
+           * listen for changes
            */
-          _watch: {
+          _listen: {
             type: Function,
           },
         };
@@ -158,7 +158,7 @@
        */
       disconnectedCallback() {
         super.disconnectedCallback();
-        this._clearWatch();
+        this._clearlisten();
       }
 
       /**
@@ -175,7 +175,7 @@
        * Check for location
        */
       check() {
-        this._clearWatch();
+        this._clearlisten();
         if (!this.supported || this.disabled) {
           return;
         }
@@ -186,9 +186,9 @@
           timeout: this.timeout,
           maximumAge: this.maximumAge,
         };
-        if (this.watch) {
+        if (this.listen) {
           // eslint-disable-next-line max-len
-          this._watch = navigator.geolocation.watchPosition(success, error, options);
+          this._listen = navigator.geolocation.watchPosition(success, error, options);
         } else {
           navigator.geolocation.getCurrentPosition(success, error, options);
         }
@@ -219,12 +219,12 @@
 
       /**
        * Stop updating latitude/longitude as the device changes position.
-       * @param {Number} watch watch ID value.
+       * @param {Number} listen listen ID value.
        */
-      _clearWatch() {
-        if (this._watch) {
-          navigator.geolocation.clearWatch(this._watch);
-          this._watch = null;
+      _clearlisten() {
+        if (this._listen) {
+          navigator.geolocation.clearWatch(this._listen);
+          this._listen = null;
         }
       }
 

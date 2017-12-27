@@ -13,19 +13,56 @@
 </head>
 <body>
 
-<test-fixture id="BasicTestFixture">
+<test-fixture id="fabricLocation">
   <template>
     <fabric-location></fabric-location>
   </template>
 </test-fixture>
 
-<test-fixture id="ChangedPropertyTestFixture">
-  <template>
-    <fabric-location prop1="new-prop1"></fabric-location>
-  </template>
-</test-fixture>
-
 <script>
+  const oncePropChanged = (el, prop) => {
+    return new Promise((resolve, reject) => {
+      const dashedPropName = prop
+        .replace(/[A-Z]/g, (match) => `-${match[0].toLowerCase()}`)
+        .concat('-changed');
+      el.addEventListener(dashedPropName, listener);
+      /**
+       * listener
+       * @param {Object} event
+       */
+      function listener(event) {
+        el.removeEventListener(dashedPropName, listener);
+        resolve(event);
+      }
+    });
+  };
+
+  const coordinatesFixture = {'latitude': 32, 'longitude': -96};
+
+  suite('Basic behaviour', () => {
+    let element;
+
+    setup(() => {
+      sinon.stub(navigator.permissions, 'query', () => {
+        return Promise.resolve({state: 'granted'});
+      });
+
+      sinon.stub(navigator.geolocation, 'getCurrentPosition', (success) => {
+        setTimeout(() => {
+          success({coords: coordinatesFixture});
+        });
+      });
+
+      element = fixture('fabricLocation');
+    });
+    test('Should return longitude and latitude coordinates', (done) => {
+      oncePropChanged(element, 'position').then(() => {
+        expect(element.position.coords).to.be.equal(coordinatesFixture);
+        done();
+      })
+      .catch(done);
+    });
+  });
 </script>
 
 </body>
