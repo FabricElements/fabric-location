@@ -41,12 +41,15 @@ Import it into the `<head>` of your page
 * `position` (object) - Geolocation API position object.
 * `longitude` (number) - The longitude of the current position.
 * `latitude` (number) - The latitude of the current position.
+* `error` (object) - Error.
 * `permissions` (string) - Current permissions state, could be granted, prompt, denied or unknown.
 * `granted` (boolean) - Permissions granted.
 
 ### Other attributes
 
 * `highAccuracy` (boolean) - Enables high accuracy GPS.
+* `disabled` (boolean) - Disable email input on sign-up form.
+* `maximumAge` (number) - The maximumAge option in the Geolocation API.
 * `timeout` (number) - The timeout option in the Gelocation API.
 * `listen` (boolean) - Update latitude/longitude as the device changes.
 
