@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
   <title>fabric-location test</title>
+  
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script src="../node_modules/wct-browser-legacy/browser.js"></script>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-
-  <link rel="import" href="../fabric-location.html">
+  <script type="module">
+    import '../fabric-location.js';
+  </script>
 </head>
 <body>
-
-<test-fixture id="fabricLocation">
-  <template>
-    <fabric-location></fabric-location>
-  </template>
-</test-fixture>
+  <test-fixture id="fabricLocation">
+    <template>
+      <fabric-location></fabric-location>
+    </template>
+  </test-fixture>
 
 <script>
   const oncePropChanged = (el, prop) => {
@@ -27,9 +28,9 @@
         .concat('-changed');
       el.addEventListener(dashedPropName, listener);
       /**
-       * listener
-       * @param {Object} event
-       */
+      * listener
+      * @param {Object} event
+      */
       function listener(event) {
         el.removeEventListener(dashedPropName, listener);
         resolve(event);
@@ -64,6 +65,5 @@
     });
   });
 </script>
-
 </body>
 </html>

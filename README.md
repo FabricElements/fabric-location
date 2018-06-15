@@ -3,14 +3,14 @@
 
 ## \<fabric-location\>
 
-`fabric-location` is a [Polymer 2](http://polymer-project.org) element that provides information about the device's geolocation.
+`fabric-location` is a [Polymer 3](http://polymer-project.org) element that provides information about the device's geolocation.
 
 ## Installation
 
-Install fabric-location with Bower
+Install fabric-location with npm
 
 ```shell
-$ bower install --save FabricElements/fabric-location
+$ npm install FabricElements/fabric-location --save
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ $ bower install --save FabricElements/fabric-location
 Import it into the `<head>` of your page
 
 ```html
-<link rel="import" href="bower_components/fabric-location/fabric-location.html">
+<script type="module" src="node_modules/@fabricelements/fabric-location/fabric-location.js"></script>
 ```
 
 ### Example: basic usage
